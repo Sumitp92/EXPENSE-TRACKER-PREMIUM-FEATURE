@@ -260,39 +260,6 @@ const updatePremiumStatus = async (req, res) => {
 
 
 //below code is for premiumFeatures
-
-const getLeaderboard = async (req, res) => {
-    try {
-      const leaderboardData = await expenseRecord.findAll({
-        attributes: [
-          'userId',
-          [Sequelize.fn('SUM', Sequelize.col('amount')), 'totalExpense'],
-        ],
-        group: ['userId', 'user.id'], 
-        order: [[Sequelize.literal('totalExpense'), 'DESC']],
-        include: {
-          model: User,
-          as: 'user', 
-          attributes: ['name'], 
-        },
-      });
-  
-      const formattedLeaderboard = leaderboardData.map((record) => ({
-        userName: record.user ? record.user.name : 'Unknown User',
-        totalExpense: record.getDataValue('totalExpense'),
-      }));
-  
-      res.status(200).json({ success: true, leaderboard: formattedLeaderboard });
-    } catch (error) {
-      console.error('Error fetching leaderboard:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Error fetching leaderboard',
-        error: error.message,
-      });
-    }
-  };
-  
   const showLeaderboard = async (req, res) => {
     try {
       const leaderboardData = await expenseRecord.findAll({
@@ -334,6 +301,5 @@ module.exports = {
     editExp,
     buyPremium,
     updatePremiumStatus,
-    getLeaderboard,
     showLeaderboard
 };
